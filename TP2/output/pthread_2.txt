@@ -1,0 +1,54 @@
+input 10
+
+real	0m0.018s
+user	0m0.000s
+sys	0m0.000s
+
+input 100
+
+real	0m0.018s
+user	0m0.000s
+sys	0m0.031s
+
+input 1000
+
+real	0m0.017s
+user	0m0.000s
+sys	0m0.016s
+
+input 10000
+
+real	0m0.017s
+user	0m0.000s
+sys	0m0.016s
+
+input 100000
+
+real	0m0.017s
+user	0m0.016s
+sys	0m0.000s
+
+input 1000000
+
+real	0m0.019s
+user	0m0.000s
+sys	0m0.016s
+
+input 10000000
+
+real	0m0.029s
+user	0m0.031s
+sys	0m0.016s
+
+input 100000000
+
+real	0m0.045s
+user	0m0.031s
+sys	0m0.031s
+
+input 1000000000
+
+real	0m0.099s
+user	0m0.156s
+sys	0m0.016s
+

@@ -1,0 +1,56 @@
+input 100000000000
+Sorting the function with insertion sort
+
+real	0m0.277s
+user	0m1.703s
+sys	0m0.016s
+
+input 1000000000000
+Sorting the function with insertion sort
+
+real	0m0.925s
+user	0m5.469s
+sys	0m0.016s
+
+input 10000000000000
+Sorting the function with insertion sort
+
+real	0m3.179s
+user	0m18.594s
+sys	0m0.031s
+
+input 100000000000000
+Sorting the function with insertion sort
+
+real	0m8.771s
+user	1m0.766s
+sys	0m0.047s
+
+input 1000000000000000
+Sorting the function with insertion sort
+
+real	0m26.867s
+user	3m15.078s
+sys	0m0.031s
+
+input 10000000000000000
+Sorting the function with insertion sort
+
+real	1m38.139s
+user	12m12.281s
+sys	0m0.422s
+
+input 100000000000000000
+Sorting the function with insertion sort
+
+real	5m13.463s
+user	39m23.922s
+sys	0m1.453s
+
+input 1000000000000000000
+Sorting the function with insertion sort
+
+real	15m36.473s
+user	118m38.156s
+sys	0m3.531s
+

@@ -1,4 +1,4 @@
-###  Comandos de execução
+###  argumentos de execução
 * **h** &rarr; comando de ajuda
 * **q** &rarr; sort do array com [quick sort](https://en.wikipedia.org/wiki/Quicksort)
 * **i** &rarr; sort do array com [insertion sort](https://pt.wikipedia.org/wiki/Insertion_sort)
