@@ -24,7 +24,7 @@ void * p_thread_divide_by_anything(void *arg)
     if(is_pair == 1)
     {
         for(int i = 7; i < (int)sqrt(atoi(s)); i++)
-            if((i != 10  && i != 9) && is_divisible_by_anything_else(s, i) == 1)
+            if((i != 10  && i != 9) && is_divisible_by_anything_else_number(number, i) == 1)
             {
                 res = add_to_array(number, i, res, pthread_result);
             }
@@ -32,7 +32,7 @@ void * p_thread_divide_by_anything(void *arg)
     else
         for(int i = 7; i <= (int)sqrt(atoi(s)); i += 2)
         {
-            if(i != 9 && is_divisible_by_anything_else(s, i) == 1 )
+            if(i != 9 && is_divisible_by_anything_else_number(number, i) == 1 )
                 res = add_to_array(number, i, res, pthread_result);
         }
     res -=14;

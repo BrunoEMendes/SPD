@@ -36,7 +36,7 @@ char * sum_digits(char * s)
     for(long i = 0; i < strlen(s); ++i)
         if(s[i] >= '0' && s[i] <= '9')
             sum += (s[i] - '0');
-    sprintf(res, "%d", sum);
+    sprintf(res, "%ld", sum);
     return res;
 }
 
@@ -49,7 +49,7 @@ char * count_digits(char * s)
     for(long i = 0; i < strlen(s); ++i)
         if(s[i] > '0' && s[i] <= '9')
             sum ++;
-    sprintf(res, "%d", sum);
+    sprintf(res, "%ld", sum);
     return res;
 }
 
@@ -148,4 +148,9 @@ long is_divisible_by_10_2_5(long two, long five)
 long is_divisible_by_anything_else(char *s, long n)
 {
     return atoi(s) % n == 0;
+}
+
+long is_divisible_by_anything_else_number(long number, long n)
+{
+    return number % n == 0;
 }

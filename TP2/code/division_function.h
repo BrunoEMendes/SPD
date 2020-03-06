@@ -16,5 +16,5 @@ long is_divisible_by_9(char * s);
 long is_divisible_by_10(char * s);
 long is_divisible_by_10_2_5(long two, long five);
 long is_divisible_by_anything_else(char *s, long n);
-
+long is_divisible_by_anything_else_number(long number, long n);
 #endif

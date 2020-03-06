@@ -16,9 +16,8 @@
 <div style="page-break-after: always;"></div>
 
 # Resumo
-O presente relatório descreve a implementação e análise de vários programas de cálculo de factores de um dado valor em processamento paralelo e processamento sequencial.
-Para este vamos implementar funções que são processadas sequencialmente e outras em paralelo onde iremos recolher dados para múltiplos números e comparar os resultados obtidos e entender a importância da programação em paralelo.
-No capítulo 5 poderemos observar que a programação paralela de facto usa mais poder de processamento no entanto o seu tempo total de execução é inferior porque estamos a dividir o problema em tarefas que irão ser executadas em simultâneo resolvendo o problemo mais rapidamente.
+O presente relatório descreve a implementação e análise de vários programas de cálculo de factores de um dado valor. Para este relatório foram implementadas as funções de forma a executar sequencialmente e em paralelo, onde serão recolhidados os tempos de execução e avaliado o desempenho demonstrando a importância do processsamento em paralelo.
+
 <div style="page-break-after: always;"></div>
 
 # Agradecimentos
@@ -41,7 +40,8 @@ No capítulo 5 poderemos observar que a programação paralela de facto usa mais
 - [1. Introdução](#1-introdução)
   - [1.1. Objectivos](#11-objectivos)
   - [1.2. Motivação](#12-motivação)
-  - [1.3. Metodologia seguida](#13-metodologia-seguida)
+  - [Metedologia](#metedologia)
+  - [1.3. Estratégia](#13-estratégia)
   - [1.4. Principais resultados/conclusões obtidos](#14-principais-resultadosconclusões-obtidos)
   - [1.5. Estrutura Do Relatório](#15-estrutura-do-relatório)
 - [2. Enquadramento](#2-enquadramento)
@@ -58,7 +58,6 @@ No capítulo 5 poderemos observar que a programação paralela de facto usa mais
   - [4.3. Implementações](#43-implementações)
   - [4.4. Recolha de dados](#44-recolha-de-dados)
 - [5. Análise de resultados e Discussão](#5-análise-de-resultados-e-discussão)
-  - [5.1. Resultados Obtidos](#51-resultados-obtidos)
   - [5.2. Análise](#52-análise)
     - [5.2.1. Tempo de procura de factores em processamento paralelo vs sequencial](#521-tempo-de-procura-de-factores-em-processamento-paralelo-vs-sequencial)
     - [5.2.2. Tempo de ordenação dos resultados das funções de processamento paralelo e sequencial](#522-tempo-de-ordenação-dos-resultados-das-funções-de-processamento-paralelo-e-sequencial)
@@ -75,46 +74,54 @@ No capítulo 5 poderemos observar que a programação paralela de facto usa mais
 # 1. Introdução
 
 ## 1.1. Objectivos
-* Implementar uma ou várias funções sequencias e com paralelismo que descubram a os [factores de um dado número](https://www.khanacademy.org/math/pre-algebra/pre-algebra-factors-multiples) e ordenar os mesmos.
+* Implementar uma ou várias funções sequencias e com paralelismo que descubram os [factores de um dado número](https://www.khanacademy.org/math/pre-algebra/pre-algebra-factors-multiples) e ordenar os mesmos.
 * Implementar e utilizar as regras para saber se 2, 3, 4, 5, 6, 9 e 10 sao factores.
 * Comparar os resultados entre as funções sequenciais e funções com paralelismo, com _pthreads_ e _OpenMP_.
 
 ## 1.2. Motivação
-A motivação deste relatório é entender quando se deve usar processamento em paralelo e o quão vantajoso este é comparado com processamento sequencial. No nosso caso vamos procurar os factores de um número, se eu tentar descobrir os factores sozinho, terei que dividir o número dado por todos os números até a raiz do dado número. Se o número for 121 só preciso de dividir 121 onze vezes, mas se tiver um amigo comigo, eu posso dividir de 1 até 6 e ele faz de 7 até 11, assim já poupamos tempo. No caso dos computadores é semelhante só que tudo numa questão de milisegundos, e para tal este relatório foi feito para demonostrar que a programação paralela é vantajosa para situações em que a função não precise ser executada por ordem.
+A motivação deste relatório é entender quando se deve usar processamento em paralelo e o quão vantajoso é este comparado com processamento sequencial. No nosso caso vamos procurar os factores de um número. Por exempo se uma pessoa tentar descobrir os factores sozinha, terá que dividir o número dado por todos os números até a raiz do dado número. Se o número for 121 será necessário dividir o número 11 vezes, mas se este processo for feito com a ajuda de alguém, pode-se separar as tarefas, uma pessoa divide de 1 até 6 e a outra faz de 7 até 11, assim há poupança de tempo. No caso dos computadores é semelhante só que tudo numa questão de milisegundos, e para tal este relatório foi feito para demonstrar que a programação paralela é vantajosa para situações em que a função não precise ser executada sequencialmente.
 
-## 1.3. Metodologia seguida
+## Metedologia
+
+## 1.3. Estratégia
 * **Não utilizar recursividade:** A recursividade requer que vários resultados sejam mantidos em memória física, tendo em conta que um dos objectivos é programar em paralelo de forma a que um programa execute mais rapidamente utilizando _threads_. No entanto, a utilização de mais _threads_ implica a utilização de mais memória, então para evitar a escassez de memória física, decidi não utilizar recursividade
-* **Utilização de comandos:** Permite que não seja necessário estar a comentar código para que outras funções executem, facilitando o teste de código e permite que várias combinações de inputs sejam possíveis através do uso da linha de comandos
+* **Utilização de comandos e argumentos:** Permite que não seja necessário estar a comentar código para que outras funções executem, facilitando o teste de código e permite que várias combinações de inputs sejam possíveis através do uso da linha de comandos
 * **Uso de testes unitários:** Permite a facilidade de teste  de código e evitar erros
 * **Uso de macros:** Facilidade de usar funções
 * **Uso de _Strings_:** Facilidade em manipular cada elemento da _String_ em realação aos _Integers_
 * **Criar múltiplas implementações:** A criação de múltiplas implementações é importante porque permite que hajam mais testes e logo mais resultados para analisar
+* **Utilizar _makefiles_:** para evitar reescrever o comando para compilar o código, criou-se um ficheiro makefile para facilitar o processo.
+* **Utilizar múltiplos ficheiros de código:** Separação do código por múltiplos ficheiros de forma a facilitar a leitura do mesmo
+
 ## 1.4. Principais resultados/conclusões obtidos
-Os principais resultados obtidos foram que as funções pthreads serão mais eficientes quanto maior for o número de operações necessárias, também se notou que apesar de o tempo gasto no cpu por parte das funções paralelas ser maior o seu tempo de execução real é bastante inferior porque a função é dividida em múltiplos bocados e esses bocados são executados em paralelo
+<!-- Os principais resultados obtidos foram que as funções pthreads serão mais eficientes quanto maior for o número de operações necessárias, também se notou que apesar de o tempo gasto no cpu por parte das funções paralelas ser maior o seu tempo de execução real é bastante inferior porque a função é dividida em múltiplos bocados e esses bocados são executados em paralelo -->
+
 ## 1.5. Estrutura Do Relatório
 Os próximos capitulos vão enquandrar o leitor na linguagem ténica e mostrar como foi feito o desenvolvimento das funções e a recolha e análise das mesmas.
 <div style="page-break-after: always;"></div>
 
 # 2. Enquadramento
 ## 2.1. Conceitos
-* **_Integer_:** número que pode ser escrito sem parte fracionaria (ver: [_Integer_](https://en.wikipedia.org/wiki/Integer))
-* **_String_:** cadeia de caracteres que representa uma palavra (ver: [_String_](https://en.wikipedia.org/wiki/String_(computer_science)))
 * **_qsort_:** método de ordenação de um conjunto de elementos sobre uma regra definida com velocidade $O(n Log(n))$ (ver: [_qsort_](https://en.wikipedia.org/wiki/Qsort))
+* **_insertion sort_:** método de ordenação que ordena um item de cada vez da lista, apesar da velocidade deste ser no pior dos casos de $O(n^2)$. No entanto se os elementos tiverem quase ordenados então o tempo de execução é quase $O(n)$
+(ver: [_insertion sort_](https://en.wikipedia.org/wiki/Insertion_sort)).
 * **factores de um número:** número que divido por outro tem resto de 0, sendo o divido e o resultado dois dos seus factores
-* **processo:** instância de um programa que pode estar a ser executado por 1 ou mais _threads_
-* **_thread_**: é um conjunto de instruções de um processo
-* **_POSIX threads_ (_p\_threads_):** padrão _[POSIX](https://pt.wikipedia.org/wiki/POSIX)_ para _threads_, o qual define a [API](https://pt.wikipedia.org/wiki/Interface_de_programa%C3%A7%C3%A3o_de_aplica%C3%A7%C3%B5es) das _threads_ utilizadas neste programa
-* **_mutex_ (mutual exclusion)** é um mecanismo de controlo de acesso a um recurso, evitando que este seja alterado simultâneamente por várias _threads_
-* **processamento sequencial:** processamento em que os comandos são executados de forma "linear", ou seja, um após outro
+* **processo:** programa em execução.
+* **_thread_**: tarefa de um processo que pode ser executado em simultâneo.
+* **_POSIX threads_ (_p\_threads_):** padrão _[POSIX](https://pt.wikipedia.org/wiki/POSIX)_ para _threads_, o qual define a [API](https://pt.wikipedia.org/wiki/Interface_de_programa%C3%A7%C3%A3o_de_aplica%C3%A7%C3%B5es) das _threads_ utilizadas neste programa.
+
+* **_mutex_ (mutual exclusion)** é um mecanismo de controlo de acesso a um recurso, permitindo que apenas seja acessido por um limite de _threads_
+
+* **processamento sequencial:** processamento em que os comandos são executados de forma sequencial, ou seja, um após outro
 * **processamento em paralelo:** processamento em que 2 ou mais comandos são executados em simulatâneo.
-* **User CPU time:** O tempo que o CPU gasta a executar, no espaço do utilizador, o processo que derivou do programa A
-* **System CPU time:** O tempo que o CPU gasta a executar, no espaço do núcleo, o processo que derivou do programa A, i, é, a execução de rotinas do sistema opetativo
-desencadeadas
-* **Waiting time:** tempo de espera até que uma operação de E/S tenha sido concluída ou devido à execução de outros processos
-* **Aceleração:** é a é definida como a razão entre o tempo de execução dum problema num único processador t1 e o tempo necessário na resolução desse mesmo problema em p processadores idênticos, tp: $S=\frac{t_1}{t_p}$ (1) (ver: [aceleração](https://tutoria.ualg.pt/2019/pluginfile.php/133291/mod_resource/content/1/2.performance_eval.pdf))
-* **Eficiência:** Define-se eficiência como sendo a fracção de tempo que os
-processadores realizam trabalho útil, ou seja, o quociente entre
-aceleração e o número de processadores: $E=\frac{S}{p}$(2) (ver: [eficiência](https://tutoria.ualg.pt/2019/pluginfile.php/133291/mod_resource/content/1/2.performance_eval.pdf))
+* **User CPU time:** "O tempo que o CPU gasta a executar, no espaço do utilizador, o processo que derivou do programa A"
+* **System CPU time:** "O tempo que o CPU gasta a executar, no espaço do núcleo, o processo que derivou do programa A, i, é, a execução de rotinas do sistema opetativo desencadeadas".
+* **Waiting time:** "tempo de espera até que uma operação de E/S tenha sido concluída ou devido à execução de outros processos".
+* **Aceleração(S):**"é definida como a razão entre o tempo de execução dum problema num único processador t1 e o tempo necessário na resolução desse mesmo problema em p processadores idênticos, tp": (ver: [aceleração](https://tutoria.ualg.pt/2019/pluginfile.php/133291/mod_resource/content/1/2.performance_eval.pdf))
+$S=\frac{t_1}{t_p}$ (1)
+* **Eficiência:** "Define-se eficiência como sendo a fracção de tempo que osprocessadores realizam trabalho útil, ou seja, o quociente entre aceleração e o número de processadores", ou seja, a capacidade de aproveitamento dos recursos à diposição do processador.(ver: [eficiência](https://tutoria.ualg.pt/2019/pluginfile.php/133291/mod_resource/content/1/2.performance_eval.pdf))
+$E=\frac{S}{p}$(2)
+
 
 <div style="page-break-after: always;"></div>
 
@@ -133,26 +140,28 @@ O problema em questão é descobrir os factores de um dado número usando a mult
 * **divisão por 10:** se o último digito for 0 ou se for divisível por 2 e por 5, então é divisível por 10.
 Para a divisão por 2, para is buscar o ultimo digito
 
-A implementação destas funções tem como o objetivo de evitar fazer cálculos desnecessários, no entanto para acedermos ao ultimo digito de um elemento em C temos que dividir o elemento e isso era o que queriamos evitar em primeiro lugar, para tal vamos converter o número para _String_ assim é facil aceder ao último digito e apenas temos que converter esse para _Integer_ e assim só teremos que ver se o último elemento é um 0, 2, 4, 6 ou 8.
+A implementação destas funções tem como o objetivo de evitar fazer cálculos desnecessários. No entanto para acedermos ao último dígito de um elemento em C temos que dividir o elemento e considerando que estamos a evitar fazer divisões o máximo possível, então,converteu-se o número para _String_ assim é facil aceder ao último dígito e apenas temos que converter esse para _Integer_ e assim só teremos que ver se o último elemento é um 0, 2, 4, 6 ou 8.
 Para o 3 teve-se que fazer uma soma dos elementos, mas como estamos a usar _Strings_ foi facil de somar digito a digito, até chegarmos ao ponto em que só temos um digito.
 Para o quatro não houve solução simples, porque teve-se que recorrer à divisão, mas como foi só à divisão dos últimos 2 digitos em que não é necessário quase processamento nenhum.
-O 5, 6 e 10 foram baseados nas implementações do 2 e a do 9 na do 3.
+O cinco, seis e dez foram baseados nas implementações do dois e a do nove na do três.
 De resto foi só implementar um ciclo que executava as funções enquanto estas fossem menores ou iguais que a raíz do dado número e guardava os números no array.
-Esse array depois é ordenado com o [qSort](#21-Conceitos).
+Esse array depois é ordenado com o _insertion sort_.
 
 
 ## 3.2. Alternativas de Desenho
-Para construir a função do 3, ponderou-se inicialmente em fazer recursivamentea função. No entanto as funções recursivas requerem que seja guardada memória temporaria, logo se tivessemos multiplas _threads_ a fazer cálculo e soma de digitos até ficarmos só com 1, haveria uma grande quantidade de memória que estaria a ser ocupada injustificadamente, esta tambem é a razão pela qual não se ponderou a utilização do mergesort.
-Tambem se poderou utilizar o primeiro elemento do ARGV para decidir que tipo de função iria ser chamada, no entanto, para a mesma função nós iriamos querer imprimi-la com prints e sem prints, com tempo e sem tempo, com sort e sem sort, as vezes 2 destes elementos misturados, e utilizando so o primeiro elemento do argv, teriamos que implementar 9 diferentes alternativas para a utilização da mesma função, e se tivessemos 2 ja seriam 18, então, recorreu-se a utilização da função [getopt](https://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html) que estava a ser utilizada no [guia 0](https://tutoria.ualg.pt/2019/pluginfile.php/132031/mod_resource/content/1/00-Revis%C3%B5es.html) da cadeira.
+Para construir a função do 3, ponderou-se inicialmente em fazer recursivamente a função. No entanto as funções recursivas requerem que seja guardada memória temporária, logo se tivessemos múltiplas _threads_ a fazer cálculo e soma de digitos até ficarmos só com 1, haveria uma grande quantidade de memória que estaria a ser ocupada injustificadamente, esta também é a razão pela qual não se utilização do _mergesort_.
+Também se poderou utilizar o primeiro elemento do ARGV para decidir que tipo de função iria ser chamada, no entanto, para a mesma função nós iriamos querer imprimi-la com prints e sem prints, com tempo e sem tempo, com sort e sem sort, as vezes 2 destes elementos misturados, e utilizando so o primeiro elemento do argv, teriamos que implementar 9 diferentes alternativas para a utilização da mesma função, e se tivessemos 2 ja seriam 18, então, recorreu-se a utilização da função [_getopt()_](https://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html) que também foi utilizada no [guia 0](https://tutoria.ualg.pt/2019/pluginfile.php/132031/mod_resource/content/1/00-Revis%C3%B5es.html) da cadeira.
 ## 3.3. Implementações
 Foram feitas 2 implementações para a versão sequencial:
 * A primeira implementação apenas executa todas as funções até à $\sqrt(n)$ sem ter em consideração aos resultados anteriores.
-* A versão otimizada tem em considerção aos resultados obtidos anteriormente, que caso um número não seja divisível por 2 então não irá dividir por nenhum número par, se não for divisível por 3, então não irá dividir por 6 nem por 9, se não for divisível por 5, então não irá dividir por 9, isto faz com que o número de comandos executados seja inferior.
+* A versão otimizada tem em consideração aos resultados obtidos anteriormente, que caso um número não seja divisível por 2 então não irá dividir por nenhum número par, se não for divisível por 3, então não irá dividir por 6 nem por 9, se não for divisível por 5, então não irá dividir por 9, isto faz com que o número de itereações seja inferior.
 ## 3.4. Recolha de dados
-Ambas as implementações foram executadas 100 vezes para cada um dos números 120, 5231, 52992, 999999, 2352992, 78954358, 514879867, 1318231997 e 2147483646 com qsort e sem _qsort_ para saber também qual era o peso que a ordenação tem no tempo de execução total, e registou-se a média de tempos de cada situação.
-Também se recolheram dados utilizando o comando seguido em baix para recolha do tempo do user CPU vs sytem CPU
+Ambas as implementações foram executadas 100 vezes para cada um dos números os $10En$ em que n é qualquer inteiro entre 0 e 10 com _insertion_sort_, anotando o _real time_, _user time_ e também o _system time_ usando uma script de bash, que correu o seguinte comando para os múltiplos números
 ```bash
-$ time ./a.out -comandos <numero>
+#sequencial sem otimização
+$ time ./a.out -l1 $((10**$i))#i é qualquer número inteiro entre 1 e 10
+#sequencial com otimização
+$ time ./a.out -l2 $((10**$i))
 ```
 
 <div style="page-break-after: always;"></div>
@@ -179,198 +188,6 @@ $ time ./a.out -comandos <numero>
 <div style="page-break-after: always;"></div>
 
 # 5. Análise de resultados e Discussão
-
-## 5.1. Resultados Obtidos
-<h6 id="tabela1">Tabela 1 - resultados obtidos da execução da função sequencial sem otimização
-</h6>
-
-|input|média do tempo de execução dos fatores(s)|média do tempo de execução da função de ordenação|média do tempo total de execução(s)|Diferença entre o tempo inicial(%)|
-|-------:|-------:|-------:|-------:|-------:|
-|120|0.000002|0|0.000002|0|
-|5231|0.000004|0|0.000004|100|
-|52992|0.000011|0.000003|0.000014|600|
-|999999|0.000035|0.000001|0.000036|1700|
-|2352992|0.000048|0|0.000048|15800|
-|79854358|0.000276|0.000042|0.000318|40350|
-|514879867|0.000785|0.000024|0.000809|69500|
-|1318231997|0.001319|7.3E-05|0.001392|69500|
-|2147483646|0.001724|6E-06|0.00173|86400|
-
-</br>
-
-<h6 id="tabela2">Tabela 2 - resultados obtidos da execução da função sequencial com otimização</h6>
-
-|input|média do tempo de execução dos fatores(s)|média do tempo de execução da função de ordenação(s)|média do tempo total de execução(s)|Diferença entre o tempo inicial(%)|
-|-------:|-------:|-------:|-------:|-------:|
-|120|0.000002|0.000002|0.000004|0|
-|5231|0.000002|0|0.000002|-50|
-|52992|0.000008|0.000001|0.000009|125|
-|999999|0.000012|0|0.000012|200|
-|2352992|0.000033|1E-06|0.000034|750|
-|79854358|0.000203|0.000059|0.000262|6450|
-|514879867|0.000278|0.000016|0.000294|7250|
-|1318231997|0.000488|8E-06|0.000496|123000|
-|2147483646|0.001307|0.000033|0.00134|33400|
-
-</br>
-
-<h6 id="tabela3">Tabela 3 - resultados obtidos da execução da função com 2 threads</h6>
-
-|input|média do tempo de execução dos fatores(s)|média do tempo de execução da função de ordenação(s)|média do tempo total de execução(s)|Diferença entre o tempo inicial(%)|
-|-------:|-------:|-------:|-------:|-------:|
-|120|0.000103|0|0.000103|0|
-|5231|0.000115|2E-06|0.000117|13.59223|
-|52992|0.000121|2E-06|0.000123|19.41748|
-|999999|0.000154|0.000059|0.000273|76.69903|
-|2352992|0.000214|1E-06|0.000034|165.0485|
-|79854358|0.000645|0.000227|0.000872|74.6019|
-|514879867|0.000806|0.000823|0.001629|1481.553|
-|1318231997|0.001132|0.001548|0.00268|2501.942|
-|2147483646|0.002734|0.001968|0.004702|4465.046|
-
-</br>
-<h6 id="tabela4">Tabela 4 - resultados obtidos da execução da função com 3 threads</h6>
-
-|input|média do tempo de execução dos fatores(s)|média do tempo de execução da função de ordenação(s)|média do tempo total de execução(s)|Diferença entre o tempo inicial(%)|
-|-------:|-------:|-------:|-------:|-------:|
-|120|0.00012|8E-06|0.000128|0|
-|5231|0.000137|0.000018|0.000155|21.09375|
-|52992|0.000123|0.000028|0.000151|17.96875|
-|999999|0.000174|0.000038|0.000212|65.625|
-|2352992|0.00018|0.000048|0.000228|78.125|
-|79854358|0.000789|0.000802|0.000872|460.9375|
-|514879867|0.000806|0.000823|0.001591|1142.969|
-|1318231997|0.00118|0.00156|0.00274|2040.625|
-|2147483646|0.001597|0.002424|0.004021|3041.406|
-
-</br>
-
-<h6 id="tabela5">Tabela 5 - resultados obtidos da execução da função genérica a executar com 4 threads</h6>
-
-|input|média do tempo de execução dos fatores(s)|média do tempo de execução da função de ordenação(s)|média do tempo total de execução(s)|Diferença entre o tempo inicial(%)|
-|-------:|-------:|-------:|-------:|-------:|
-|120|0.000141|2E-06|0.000143|0|
-|5231|0.000178|0|0.000178|24.47552|
-|52992|0.000172|0.000013|0.000185|29.37063|
-|999999|0.000192|0.00002|0.000212|48.25175|
-|2352992|0.000253|5E-06|0.000258|80.41958|
-|79854358|0.000284|0.000313|0.000597|317.4825|
-|514879867|0.000343|0.001013|0.001356|848.2517|
-|1318231997|0.000473|0.001091|0.001564|993.7063|
-|2147483646|0.000891|0.001936|0.002827|1876.923|
-
-
-</br>
-<h6 id="tabela6">Tabela 6 - resultados obtidos da execução da função genérica a executar com 8 threads</h6>
-
-|input|média do tempo de execução dos fatores(s)|média do tempo de execução da função de ordenação(s)|média do tempo total de execução(s)|Diferença entre o tempo inicial(%)|
-|-------:|-------:|-------:|-------:|-------:|
-|120|0.000538|0.000019|0.000557|0|
-|5231|0.000552|5E-06|0.000557|0|
-|52992|0.000549|0.00003|0.000579|3.949731|
-|999999|0.000567|0.000016|0.000583|4.667864|
-|2352992|0.00058|0.000024|0.000604|8.438061|
-|79854358|0.000515|0.000337|0.000852|52.9623|
-|514879867|0.000574|0.0008|0.001374|146.6786|
-|1318231997|0.000793|0.001197|0.00199|257.2711|
-|2147483646|0.000908|0.001697|0.002605|367.684|
-
-</br>
-
-<h6 id="tabela7">Tabela 7 - resultados obtidos da execução da função genérica a executar com 4 threads e mutexes</h6>
-
-|input|média do tempo de execução dos fatores(s)|média do tempo de execução da função de ordenação(s)|média do tempo total de execução(s)|Diferença entre o tempo inicial(%)|
-|-------:|-------:|-------:|-------:|-------:|
-|120|0.000154|0.000008|0.000162|0|
-|5231|0.000153|0.000009|0.000162|0|
-|52992|0.000177|7E-06|0.000184|13.58025|
-|999999|0.000179|3E-06|0.000182|12.34568|
-|2352992|0.000218|3E-06|0.000221|36.41975|
-|79854358|0.000342|0.000016|0.000358|120.9877|
-|514879867|0.000398|0.000013|0.000411|153.7037|
-|1318231997|0.000466|0.000015|0.000481|196.9136|
-|2147483646|0.000857|0.000018|0.000875|440.1235|
-
-</br>
-
-<h6 id="tabela8">Tabela 8 - resultados obtidos da execução da função genérica a executar com 8 threads e mutexes</h6>
-
-|input|média do tempo de execução dos fatores(s)|média do tempo de execução da função de ordenação(s)|média do tempo total de execução(s)|Diferença entre o tempo inicial(%)|
-|-------:|-------:|-------:|-------:|-------:|
-|120|0.000533|0.00003|0.000563|0|
-|5231|0.000547|0.000027|0.000574|1.953819|
-|52992|0.000496|0.000079|0.000575|21.31439|
-|999999|0.000602|2E-06|00.000604|7.282416|
-|2352992|0.000497|1E-05|0.000507|-9.94671|
-|79854358|0.00061|8E-06|0.000618|9.769094|
-|514879867|0.000528|5E-05|0.000578|2.664298|
-|1318231997|0.000603|4.2E-05|0.000645|14.56483|
-|2147483646|0.000927|0.000009|0.000936|66.2522|
-
-</br>
-
-<h6 id="tabela9">Tabela 9 - tempo de resposta para as várias funções com input 2147483646 e sem ordenação </h6>
-
-|função|user CPU time|system CPU time|waiting time|
-|-------:|-------:|-------:|-------:|
-|sequencial sem otimização|0.164|0.141|0.031|
-|sequencial com otimização|0.126|0.125|0|
-|2 pthreads|0.288|0.266|0.016|
-|3 pthreads|0.155|0.234|0.016|
-|N pthreads sem mutexes: 4 threads|0.092|0.219|0|
-|N pthreads sem mutexes: 8 threads|0.1|0.234|0.063|
-|N pthreads com mutexes: 4 threads|0.095|0.203|0.031|
-|N pthreads com mutexes: 8 threads|0.097|0.281|0.031|
-
-</br>
-
-<h6 id="tabela10">Tabela 10 - tempo de resposta para as várias funções com input 2147483646 e com ordenação </h6>
-
-|função|user CPU time|system CPU time|waiting time|
-|-------:|-------:|-------:|-------:|
-|sequencial sem otimização|0.171|0.156|0.016|
-|sequencial com otimização|0.136|0.141|0|
-|2 pthreads|0.419|0.359|0.047|
-|3 pthreads|0.329|0.422|0.016|
-|N pthreads sem mutexes: 4 threads|0.263|0.234|0.031|
-|N pthreads sem mutexes: 8 threads|0.1|0.234|0.063|
-|N pthreads com mutexes: 4 threads|0.095|0.25|0.016|
-|N pthreads com mutexes: 8 threads|0.098|0.297|0.078|
-
-</br>
-
-
-<h6 id="tabela11">Tabela 11 - Aceleração das funções de N threads com mutexes em relação à função sequencial com otimização </h6>
-
-|Aceleração|4 threads|8 threads|
-|-------:|-------:|-------:|
-|120|0.014184397|0.003752345|
-|5231|0.011235955|0.003656307|
-|52992|0.046511628|0.016129032|
-|999999|0.0625|0.019933555|
-|2352992|0.130434783|0.06639839|
-|79854358|0.714788732|0.332786885|
-|514879867|0.810495627|0.526515152|
-|1318231997|1.031712474|0.809286899|
-|2147483646|1.466891134|1.409924488|
-
-</br>
-
-
-<h6 id="tabela12">Tabela 12 - Eficiência das funções de N threads com mutexes de 4 e 8 threads </h6>
-
-|Eficiência|4 threads|8 threads|
-|-------:|-------:|-------:|
-|120|0.354609929|0.046904315|
-|5231|0.280898876|0.045703839|
-|52992|1.162790698|0.201612903|
-|999999|1.5625|0.249169435|
-|2352992|3.260869565|0.829979879|
-|79854358|17.86971831|4.159836066|
-|514879867|20.26239067|6.581439394|
-|1318231997|25.79281184|10.11608624|
-|2147483646|36.67227834|17.62405609|
-
 
 ## 5.2. Análise
 ### 5.2.1. Tempo de procura de factores em processamento paralelo vs sequencial
@@ -484,3 +301,4 @@ O processamento em paralelo é de facto mais eficiente que o processamento seque
 [22] [qsort](https://en.wikipedia.org/wiki/Qsort)
 [23] [Pdfs de Avaliação de Performance da Professora Margarida Moura da cadeira de SPD](https://tutoria.ualg.pt/2019/pluginfile.php/133291/mod_resource/content/1/2.performance_eval.pdf)
 [24] [Definição de eficiência e aceleração da professora Margarida Madeira](https://tutoria.ualg.pt/2019/pluginfile.php/133291/mod_resource/content/1/2.performance_eval.pdf)
+https://en.wikipedia.org/wiki/Insertion_sort

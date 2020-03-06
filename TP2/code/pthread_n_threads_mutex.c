@@ -31,10 +31,8 @@ long add_to_array_mutex(long number, long div,  long res, long * output)
 void run_pthread(Function *f_array,long number, long* output, char * input_string, int pthread_number, long max_number, int jump)
 {
     int temp = 0;
-
     for(long i = 1 + pthread_number; i <= max_number; i += NUM_THREADS)
     {
-
 
         if(i == 1)
             pthread_result_n  = add_to_array_mutex(number, i, pthread_result_n, output);
@@ -46,7 +44,7 @@ void run_pthread(Function *f_array,long number, long* output, char * input_strin
                 pthread_result_n = add_to_array_mutex(number, i, pthread_result_n, output);
 
         }
-        else if(is_divisible_by_anything_else(input_string, i) == 1)
+        else if(is_divisible_by_anything_else_number(number, i) == 1)
             pthread_result_n = add_to_array_mutex(number, i, pthread_result_n, output);
     }
 }

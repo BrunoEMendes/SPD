@@ -32,9 +32,9 @@ void factorials_loop(Function * f_array, char * input_string, long number,\
     #pragma omp parallel for
     for(long i = 3; i <= max_number; i += jump)
     {
-        if(i > 10 || i ==8 || i!=7)
+        if(i > 10 || i ==8 || i==7)
         {
-            if(is_divisible_by_anything_else(input_string, i) == 1)
+            if(is_divisible_by_anything_else_number(number, i) == 1)
                 add_to_array_openmp(number, i);
         }
         else if(i < 11 && has_pre_def_function(i, f_array))
@@ -53,7 +53,7 @@ void run_openmp(Function *f_array, char *input_string)
     open_mp_size = 0;
 
     add_to_array_openmp(number, 1);
-    long max_number = (long)sqrt(number);
+    long max_number = (long)sqrtl(number);
 
     int is_pair = is_divisible_by_2(input_string);
 
@@ -74,9 +74,9 @@ void test_openMP(char * input_string)
 
     double elapsed_start, elapsed_merge, get_function_run_time();
 
-    int size = sqrt((long) strtol(input_string, (char **)NULL, 10)) * 2;
+    int size = sqrtl((long) strtol(input_string, (char **)NULL, 10)) * 2;
     if(size > 500)
-        size = sqrt((long) strtol(input_string, (char **)NULL, 10));
+        size = sqrtl((long) strtol(input_string, (char **)NULL, 10));
     open_mp_result= calloc( size, sizeof *open_mp_result);
 
     // function array

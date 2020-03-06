@@ -48,7 +48,7 @@ void *generic_function(void * pa)
                     res = add_to_array(number, i, res, output);
 
             }
-            else if(is_divisible_by_anything_else(input_string, i) == 1){
+            else if(is_divisible_by_anything_else_number(number, i) == 1){
                 res = add_to_array(number, i, res, output);
             }
         }
@@ -66,7 +66,7 @@ void *generic_function(void * pa)
                     res = add_to_array(number, i, res, output);
 
             }
-            else if(is_divisible_by_anything_else(input_string, i) == 1)
+            else if(is_divisible_by_anything_else_number(number, i) == 1)
                 res = add_to_array(number, i, res, output);
         }
     }
@@ -104,7 +104,6 @@ void pthread_optimzation_with_custom_number_of_threads(char *s)
 
     for(int i = 0; i < NUM_THREADS; ++i)
         pthread_create(&threads[i], NULL, generic_function, (void *) &pa[i]);
-
     for(int i = 0; i < NUM_THREADS; ++i)
         pthread_join(threads[i], &size_array_thread[i]);
     int size_of_output = 0;

@@ -9,7 +9,7 @@
 #include "sequential_with_optimization.h"
 
 // add value to array
-int add_to_array(long number, int div,  int res, long * output)
+int add_to_array(long number, long div,  int res, long * output)
 {
     output[res++] = div;
     output[res++] = number / div;
@@ -51,15 +51,16 @@ int sequential_optimization_loop(char *input_string, int size, long * output)
     }
     if(is_pair == 1)
     {
-
         for(long i = 7; i <= number_sqrt; i++)
-            if((i != 10  && i != 9) && is_divisible_by_anything_else(input_string, i) == 1)
+        {
+            if((i != 10  && i != 9) && is_divisible_by_anything_else_number(number, i) == 1)
                 res = add_to_array(number, i, res, output);
+        }
     }
     else
         for(long i = 7; i <= number_sqrt; i += 2)
         {
-            if(i != 9 && is_divisible_by_anything_else(input_string, i) == 1 )
+            if(i != 9 && is_divisible_by_anything_else_number(number, i) == 1 )
                 res = add_to_array(number, i, res, output);
         }
     return res;
@@ -91,7 +92,6 @@ void sequential_optimization(char *input_string)
         elapsed_merge = get_function_run_time();
         printf( "\nElapsed time till sort : Loop time = %8f\n", elapsed_merge - elapsed_start);
     }
-
     sort_function(output, n);
 
     if(time_output == 1)

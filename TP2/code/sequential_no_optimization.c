@@ -38,7 +38,7 @@ int sequential_output(char *input_string, int size, long * output)
                 output[res++] = number / f_array[pos].res;
             }
         }
-        else if(is_divisible_by_anything_else(input_string, i) == 1)
+        else if(is_divisible_by_anything_else_number(number, i) == 1)
         {
 
             output[res++] = i;
