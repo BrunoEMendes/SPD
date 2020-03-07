@@ -44,6 +44,7 @@ void factorials_loop(Function * f_array, char * input_string, long number,\
                 add_to_array_openmp(number, i);
         }
     }
+    // #pragma omp barrier
 }
 
 void run_openmp(Function *f_array, char *input_string)
